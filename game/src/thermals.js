@@ -7,6 +7,23 @@ import { CFG } from './config.js';
 
 const PARTICLES_PER_COLUMN = 120;
 
+// Tekstur titik lembut (lingkaran radial) — tanpa ini THREE.Points
+// ter-render sebagai KOTAK putih; dari dekat (kamera di dalam kolom)
+// kotak-kotak itu menutupi layar (cacat visual shot thermal, 26 Nov).
+function makeSoftDotTexture() {
+  const c = document.createElement('canvas');
+  c.width = 64;
+  c.height = 64;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.4, 'rgba(255,255,255,0.6)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+
 export function createThermals(scene, rng) {
   const group = new THREE.Group();
   group.name = 'thermals';
@@ -60,10 +77,12 @@ export function createThermals(scene, rng) {
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const mat = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 1.4,
+      size: 0.9,
+      map: makeSoftDotTexture(),
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.55,
       sizeAttenuation: true,
+      depthWrite: false,
     });
     const points = new THREE.Points(geo, mat);
     group.add(points);

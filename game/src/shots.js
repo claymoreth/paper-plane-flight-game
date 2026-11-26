@@ -38,15 +38,19 @@ export function applyShot(search, ctx) {
   }
   if (shot === 'rings') {
     // 20 m di depan cincin #1 (pusat 0,55,180 → pesawat di z=200).
+    // x=20: kamera chase tidak lagi menabrak pohon yang berdiri tepat di
+    // samping kamera pada x=0 (blob hijau raksasa di tepi kiri shot lama).
     const c = CFG.RING_POSITIONS[0];
-    startFlying('ring-run', c.x, c.y, c.z + 20, 0, 0, 18);
+    startFlying('ring-run', c.x + 20, c.y, c.z + 20, 0, 0, 18);
     return 'rings';
   }
   if (shot === 'thermal') {
-    // Di dalam kolom termal #1 (60, 80), ketinggian 50 m, partikel naik.
+    // DI LUAR kolom termal #1 (60, 80): pesawat 30 m di selatan kolom,
+    // menghadap utara ke arah kolom. Posisi lama (di DALAM kolom) membuat
+    // kamera chase ikut masuk ke awan partikel — titik-titik putih dekat
+    // kamera ter-render sebagai balok putih raksasa yang menutupi layar.
     const t = CFG.THERMAL_POSITIONS[0];
-    startFlying('thermal-chase', t.x, 50, t.z, 0, 0.1, 14);
-    state.inThermal = true;
+    startFlying('thermal-chase', t.x, 50, t.z + 30, 0, 0.1, 14);
     return 'thermal';
   }
   if (shot === 'landing') {

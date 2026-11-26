@@ -9,6 +9,24 @@ const POOL_SIZE = 300;
 const GOLD = new THREE.Color(0xffc93c);
 const WHITE = new THREE.Color(0xffffff);
 
+// Tekstur titik lembut (lingkaran radial) — tanpa ini THREE.Points
+// ter-render sebagai KOTAK putih; jejak termal (2 titik/frame di posisi
+// pesawat) menumpuk jadi kolom balok putih raksasa di belakang pesawat
+// (cacat visual shot thermal, 26 Nov).
+function makeSoftDotTexture() {
+  const c = document.createElement('canvas');
+  c.width = 64;
+  c.height = 64;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.4, 'rgba(255,255,255,0.6)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+
 export class FX {
   constructor(scene) {
     this.positions = new Float32Array(POOL_SIZE * 3);
@@ -23,7 +41,8 @@ export class FX {
     geo.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
     geo.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
     const mat = new THREE.PointsMaterial({
-      size: 1.6,
+      size: 0.9,
+      map: makeSoftDotTexture(),
       vertexColors: true,
       transparent: true,
       opacity: 0.95,

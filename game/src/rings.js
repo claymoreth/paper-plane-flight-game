@@ -61,9 +61,12 @@ export function createRings(scene) {
     mesh.castShadow = true;
     group.add(mesh);
 
-    // Nomor urut melayang di atas cincin.
+    // Nomor urut melayang di atas cincin. Ukuran 1,8 m (bukan 3,2 m):
+    // label 3,2 m dari dekat ter-render sebagai balok putih raksasa yang
+    // menutupi layar (cacat visual shot thermal, 26 Nov — label cincin 2
+    // hanya ~17 m dari kamera). 1,8 m tetap terbaca dari jauh.
     const label = new THREE.Mesh(
-      new THREE.PlaneGeometry(3.2, 3.2),
+      new THREE.PlaneGeometry(1.8, 1.8),
       new THREE.MeshBasicMaterial({
         map: numberTexture(i + 1),
         transparent: true,
