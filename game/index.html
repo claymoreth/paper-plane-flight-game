@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PAPER PLANE — Pesawat Kertas di Dunia Origami</title>
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="game-canvas"></canvas>
+
+<!-- HUD kiri atas: ALT / SPEED / HEADING -->
+<div id="hud-left" class="hud-panel">
+  <div class="hud-row"><span class="hud-label">ALT</span><span id="hud-alt" class="hud-value">55 m</span></div>
+  <div class="hud-row"><span class="hud-label">SPEED</span><span id="hud-speed" class="hud-value">20.0 / 42 m/s</span></div>
+  <div class="hud-row"><span class="hud-label">HDG</span><span id="hud-heading-num" class="hud-value">000°</span></div>
+  <div id="compass-window"><div id="compass-strip"></div><div id="compass-needle">▲</div></div>
+</div>
+
+<!-- HUD kanan atas: TIME / SCORE / MISI -->
+<div id="hud-right" class="hud-panel">
+  <div class="hud-row"><span class="hud-label">TIME</span><span id="hud-time" class="hud-value">--:--</span></div>
+  <div class="hud-row"><span class="hud-label">SCORE</span><span id="hud-score" class="hud-value">0</span></div>
+  <div class="hud-row"><span class="hud-label">MISI</span><span id="hud-mission" class="hud-value">PAPER PLANE</span></div>
+  <div class="hud-row"><span id="hud-rings" class="hud-value">RINGS 0/8</span></div>
+</div>
+
+<!-- HUD bawah tengah: objektif + indikator termal -->
+<div id="hud-bottom">
+  <div id="hud-objective"></div>
+  <div id="hud-thermal">THERMAL —</div>
+</div>
+
+<!-- Menu awal -->
+<div id="menu" class="overlay">
+  <div class="overlay-box">
+    <h1>PAPER PLANE</h1>
+    <p class="tagline">Pesawat kertas melayang di dunia origami. Tanpa throttle —<br>gravitasi dan termal yang menerbangkanmu.</p>
+    <div class="mission-list">
+      <button class="menu-btn selected" data-mission="0"><b>1 · Ring Run</b><span>Lewati 8 cincin dalam 180 detik</span></button>
+      <button class="menu-btn" data-mission="1"><b>2 · Thermal Chase</b><span>Naik 3 termal, capai 100 m, terbang ke marker akhir</span></button>
+      <button class="menu-btn" data-mission="2"><b>3 · Precision Landing</b><span>Mendarat di dalam lingkaran merah</span></button>
+      <button class="menu-btn" data-mission="3"><b>4 · Free Flight</b><span>Terbang bebas tanpa timer</span></button>
+    </div>
+    <p class="controls">W/S atau ↑/↓ pitch &nbsp;·&nbsp; A/D atau ←/→ bank &nbsp;·&nbsp; C kamera &nbsp;·&nbsp; P pause &nbsp;·&nbsp; M mute &nbsp;·&nbsp; R restart &nbsp;·&nbsp; Esc menu</p>
+    <p class="hint">Tekan Enter atau klik misi untuk mulai · pilih misi dengan tombol 1–4</p>
+  </div>
+</div>
+
+<!-- Overlay pause -->
+<div id="pause-overlay" class="overlay hidden">
+  <div class="overlay-box">
+    <h2>PAUSE</h2>
+    <p class="tagline">P untuk lanjut · R untuk restart misi · Esc untuk menu</p>
+  </div>
+</div>
+
+<!-- Overlay Mission Complete / Failed -->
+<div id="end-overlay" class="overlay hidden">
+  <div class="overlay-box">
+    <h2 id="end-title">MISSION COMPLETE</h2>
+    <p id="end-subtitle" class="tagline"></p>
+    <p id="end-score" class="end-score">SKOR AKHIR: 0</p>
+    <div class="end-buttons">
+      <button id="end-restart" class="menu-btn">Main Lagi (R)</button>
+      <button id="end-menu" class="menu-btn">Menu (Esc)</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

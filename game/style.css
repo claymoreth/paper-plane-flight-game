@@ -1,0 +1,243 @@
+/* PAPER PLANE — HUD + overlay. Font sistem saja, tanpa aset luar. */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #bfe3f2;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #1a1a1a;
+}
+
+#game-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* --- Panel HUD --- */
+.hud-panel {
+  position: fixed;
+  z-index: 10;
+  background: rgba(20, 30, 40, 0.55);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  min-width: 210px;
+}
+
+#hud-left { top: 14px; left: 14px; }
+#hud-right { top: 14px; right: 14px; text-align: right; }
+
+.hud-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  line-height: 1.55;
+}
+
+.hud-label {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  opacity: 0.75;
+}
+
+.hud-value {
+  font-weight: 700;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#hud-rings { font-size: 14px; color: #ffd94d; }
+
+/* --- Kompas: jendela strip yang bergeser ke kiri saat heading naik --- */
+#compass-window {
+  position: relative;
+  height: 22px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+#compass-strip {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  will-change: transform;
+}
+
+#compass-strip .tick {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  transform: translateX(-50%);
+}
+
+#compass-strip .tick.cardinal {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+#compass-needle {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  transform: translateX(-50%);
+  color: #ff5a5a;
+  font-size: 12px;
+}
+
+/* --- HUD bawah tengah --- */
+#hud-bottom {
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+  width: min(90vw, 640px);
+}
+
+#hud-objective {
+  display: inline-block;
+  background: rgba(20, 30, 40, 0.55);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+#hud-objective:empty { display: none; }
+
+#hud-thermal {
+  display: inline-block;
+  margin-top: 6px;
+  background: rgba(20, 30, 40, 0.45);
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+
+#hud-thermal.on {
+  background: rgba(30, 120, 200, 0.75);
+  color: #ffffff;
+}
+
+/* --- Overlay (menu / pause / akhir misi) --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 30, 45, 0.45);
+}
+
+.overlay.hidden { display: none; }
+
+.overlay-box {
+  background: rgba(255, 252, 245, 0.96);
+  border-radius: 16px;
+  padding: 28px 34px;
+  max-width: 560px;
+  width: calc(100vw - 40px);
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.overlay-box h1 {
+  margin: 0 0 6px;
+  font-size: 44px;
+  letter-spacing: 0.08em;
+  color: #b91c1c;
+}
+
+.overlay-box h2 {
+  margin: 0 0 8px;
+  font-size: 34px;
+  letter-spacing: 0.06em;
+  color: #b91c1c;
+}
+
+.tagline {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.mission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.menu-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid #d8cfc0;
+  background: #ffffff;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+
+.menu-btn b { display: block; font-size: 16px; }
+.menu-btn span { font-size: 13px; color: #6b7280; }
+
+.menu-btn:hover { border-color: #b91c1c; }
+.menu-btn.selected {
+  border-color: #b91c1c;
+  background: #fff1f1;
+}
+
+.controls {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #374151;
+  margin: 0 0 6px;
+}
+
+.hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.end-score {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 10px 0 18px;
+}
+
+.end-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.end-buttons .menu-btn { text-align: center; font-weight: 700; }
